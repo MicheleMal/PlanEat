@@ -14,7 +14,7 @@ export class AuthService {
     ) {}
 
     // Signup - registrazione nuovo utente
-    async signup(createUserDto: CreateUserDto): Promise<User> {
+    async signup(createUserDto: CreateUserDto): Promise<Omit<User, "password">> {
         const hashedPw = await bcrypt.hash(createUserDto.password, 10);
 
         const user = await this.usersService.createUser({
