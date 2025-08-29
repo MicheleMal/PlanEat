@@ -5,6 +5,9 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "./users/entities/user.entity";
 import { AuthModule } from "./auth/auth.module";
 import { ConfigModule } from "@nestjs/config";
+import { Recipe } from "./recipes/entities/recipe.entity";
+import { Ingredient } from "./recipes/entities/ingredient.entity";
+import { RecipeIngredient } from "./recipes/entities/recipeIngredient.entity";
 
 @Module({
     imports: [
@@ -18,7 +21,7 @@ import { ConfigModule } from "@nestjs/config";
             username: "root",
             password: "",
             database: "PlanEat",
-            entities: [User],
+            entities: [User, Recipe, Ingredient, RecipeIngredient],
             synchronize: true,
         }),
         
