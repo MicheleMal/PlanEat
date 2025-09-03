@@ -54,7 +54,7 @@ export class UsersService {
             },
             select: ["email", "name", "createdAt", "updateAt"],
         });
-
+        
         return user;
     }
 

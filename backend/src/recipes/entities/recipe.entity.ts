@@ -9,7 +9,7 @@ import {
 import { User } from "src/users/entities/user.entity";
 import { RecipeIngredient } from "./recipeIngredient.entity";
 
-@Entity()
+@Entity({ name: "recipes" })
 export class Recipe {
     @PrimaryGeneratedColumn()
     id: number;
@@ -33,10 +33,15 @@ export class Recipe {
     })
     prepTime: number; // minuti
 
-    @ManyToOne(() => User, (user) => user.recipes)
+    @ManyToOne(() => User, (user) => user.recipes, {
+        onDelete: "CASCADE",
+    })
     @JoinColumn({ name: "userId" })
     user: User;
 
-    @OneToMany(() => RecipeIngredient, recipeIngredient => recipeIngredient.recipe)
-    recipeIngredient: RecipeIngredient[]
+    @OneToMany(
+        () => RecipeIngredient,
+        (recipeIngredient) => recipeIngredient.recipe
+    )
+    recipeIngredient: RecipeIngredient[];
 }
