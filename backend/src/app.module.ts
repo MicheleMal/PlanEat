@@ -10,6 +10,9 @@ import { Ingredient } from "./ingredients/entity/ingredient.entity";
 import { RecipeIngredient } from "./recipes/entities/recipeIngredient.entity";
 import { IngredientsModule } from "./ingredients/ingredients.module";
 import { RecipesModule } from "./recipes/recipes.module";
+import { MealsModule } from "./meals/meals.module";
+import { Meal } from "./meals/entity/meal.entity";
+import { MealRecipe } from "./meals/entity/mealRecipe.entity";
 
 @Module({
     imports: [
@@ -23,13 +26,14 @@ import { RecipesModule } from "./recipes/recipes.module";
             username: "root",
             password: "",
             database: "PlanEat",
-            entities: [User, Recipe, Ingredient, RecipeIngredient],
+            entities: [User, Recipe, Ingredient, RecipeIngredient, Meal, MealRecipe],
             synchronize: true,
             //logging: true
         }),
         AuthModule,
         IngredientsModule,
-        RecipesModule
+        RecipesModule,
+        MealsModule
     ],
     controllers: [AppController],
     providers: [AppService],

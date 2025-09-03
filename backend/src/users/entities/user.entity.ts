@@ -1,3 +1,4 @@
+import { Meal } from "src/meals/entity/meal.entity";
 import { Recipe } from "src/recipes/entities/recipe.entity";
 import {
     Column,
@@ -8,7 +9,7 @@ import {
     UpdateDateColumn,
 } from "typeorm";
 
-@Entity({name: "users"})
+@Entity({ name: "users" })
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
@@ -43,4 +44,7 @@ export class User {
 
     @OneToMany(() => Recipe, (recipe) => recipe.user)
     recipes: Recipe[];
+
+    @OneToMany(() => Meal, (meal) => meal.user)
+    meals: Meal[];
 }

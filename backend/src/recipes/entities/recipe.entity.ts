@@ -8,6 +8,7 @@ import {
 } from "typeorm";
 import { User } from "src/users/entities/user.entity";
 import { RecipeIngredient } from "./recipeIngredient.entity";
+import { MealRecipe } from "src/meals/entity/mealRecipe.entity";
 
 @Entity({ name: "recipes" })
 export class Recipe {
@@ -44,4 +45,10 @@ export class Recipe {
         (recipeIngredient) => recipeIngredient.recipe
     )
     recipeIngredient: RecipeIngredient[];
+
+    @OneToMany(
+        () => MealRecipe,
+        (mealRecipe) => mealRecipe.recipe
+    )
+    mealRecipe: MealRecipe[];
 }
