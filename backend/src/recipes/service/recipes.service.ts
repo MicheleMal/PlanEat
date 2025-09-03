@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ConflictException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Like, Repository } from "typeorm";
 import { RecipeIngredient } from "../entities/recipeIngredient.entity";
@@ -28,6 +28,16 @@ export class RecipesService {
         req: Request
     ): Promise<Recipe> {
         const { userId } = req["user"];
+
+        const recipe = await this.recipeRepository.findOne({
+            where: {
+                title: createRecipeDto.title
+            }
+        })
+
+        if(recipe){
+            throw new ConflictException("Nome ricetta già presente")
+        }
 
         const newRecipe = this.recipeRepository.create({
             ...createRecipeDto,
