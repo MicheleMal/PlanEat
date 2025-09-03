@@ -6,6 +6,7 @@ import {
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
+    UpdateDateColumn,
 } from "typeorm";
 import { MealType } from "../enum/mealType.enum";
 import { IsNotEmpty } from "class-validator";
@@ -35,7 +36,7 @@ export class Meal {
     @CreateDateColumn({ type: "timestamp" })
     createdAt: Date;
 
-    @CreateDateColumn({ type: "timestamp" })
+    @UpdateDateColumn({ type: "timestamp" })
     updateAt: Date;
 
     @ManyToOne(() => User, (user) => user.meals, {
@@ -47,5 +48,5 @@ export class Meal {
     user: User;
 
     @OneToMany(()=>MealRecipe, (mealRecipe)=>mealRecipe.meal)
-    MealRecipe: MealRecipe[]
+    mealRecipe: MealRecipe[]
 }

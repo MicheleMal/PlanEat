@@ -1,7 +1,7 @@
 export enum MealType{
-    COLAZIONE = "colazione",
-    PRANZO = "pranzo",
-    CENA = "cena",
-    MERENDA = "merenda",
-    APERITIVO = "aperitivo"
+    COLAZIONE = "Colazione",
+    PRANZO = "Pranzo",
+    CENA = "Cena",
+    MERENDA = "Merenda",
+    APERITIVO = "Aperitivo"
 }

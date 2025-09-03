@@ -11,11 +11,15 @@ export class MealRecipe{
     @PrimaryColumn()
     recipeId: number
 
-    @ManyToOne(()=>Meal, (meal)=>meal.MealRecipe)
+    @ManyToOne(()=>Meal, (meal)=>meal.mealRecipe, {
+        onDelete: "CASCADE"
+    })
     @JoinColumn({name: "mealId"})
     meal: Meal
 
-    @ManyToOne(()=>Recipe, (recipe)=>recipe.mealRecipe)
+    @ManyToOne(()=>Recipe, (recipe)=>recipe.mealRecipe, {
+        onDelete: "CASCADE"
+    })
     @JoinColumn({name: "recipeId"})
     recipe: Recipe
 
