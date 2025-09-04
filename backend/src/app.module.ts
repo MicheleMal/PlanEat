@@ -17,7 +17,7 @@ import { MealRecipe } from "./meals/entity/mealRecipe.entity";
 @Module({
     imports: [
         ConfigModule.forRoot({
-            isGlobal: true
+            isGlobal: true,
         }),
         TypeOrmModule.forRoot({
             type: "mysql",
@@ -26,16 +26,23 @@ import { MealRecipe } from "./meals/entity/mealRecipe.entity";
             username: "root",
             password: "",
             database: "PlanEat",
-            entities: [User, Recipe, Ingredient, RecipeIngredient, Meal, MealRecipe],
+            entities: [
+                User,
+                Recipe,
+                Ingredient,
+                RecipeIngredient,
+                Meal,
+                MealRecipe,
+            ],
             synchronize: true,
             //logging: true
         }),
         AuthModule,
         IngredientsModule,
         RecipesModule,
-        MealsModule
+        MealsModule,
     ],
     controllers: [AppController],
     providers: [AppService],
-}) 
+})
 export class AppModule {}
