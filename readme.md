@@ -22,8 +22,8 @@ Questo progetto permettere agli utenti di creare le proprie ricette personalizza
     - Supporto a diversi tipi di pasto (colazione, pranzo, cena, merenda, aperitivo)
     - Recupero pasti per range di date
 
-- **(Futuro) Lista della spesa**
-    - Generazione automatica lista ingredienti in base ai pasti pianificati
+- **Lista della spesa**
+    - Generazione automatica lista ingredienti in base ai pasti pianificati per un range di date (startDate, endDate)
 
 ---
 
@@ -32,3 +32,5 @@ Questo progetto permettere agli utenti di creare le proprie ricette personalizza
 - TypeORM
 - MySQL
 
+## Documentazione
+In locale localhost:3000/api 
