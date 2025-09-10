@@ -78,7 +78,7 @@ export class ShoppingListService {
             await this.shoppingListRepository.save(newShoppingList);
         } else {
             throw new ConflictException(
-                "Lista già generate per questo range di date"
+                "Lista già generata per questo range di date"
             );
         }
 

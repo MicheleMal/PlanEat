@@ -41,8 +41,6 @@ export class IngredientsService {
             })
             .getMany();
 
-        console.log(ingredients)
-
         return ingredients;
     }
 }
