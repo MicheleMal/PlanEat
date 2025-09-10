@@ -1,20 +1,28 @@
 import { RecipeIngredient } from "src/recipes/entities/recipeIngredient.entity";
+import { ShoppingListItem } from "src/shoppingList/entities/shoppingListItem.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({name: "ingredients"})
-export class Ingredient{
-
+@Entity({ name: "ingredients" })
+export class Ingredient {
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
     @Column({
         type: "varchar",
         nullable: false,
-        unique: true
+        unique: true,
     })
-    name: string
+    name: string;
 
-    @OneToMany(() => RecipeIngredient, recipeIngredient => recipeIngredient.ingredient)
-    recipeIngredient: RecipeIngredient[]
+    @OneToMany(
+        () => RecipeIngredient,
+        (recipeIngredient) => recipeIngredient.ingredient
+    )
+    recipeIngredient: RecipeIngredient[];
 
+    @OneToMany(
+        () => ShoppingListItem,
+        (shoppingListItem) => shoppingListItem.ingredient
+    )
+    shoppingListItem: ShoppingListItem[];
 }

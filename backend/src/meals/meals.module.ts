@@ -10,6 +10,7 @@ import { MealRecipe } from './entity/mealRecipe.entity';
         Meal, MealRecipe
     ])],
     providers: [MealsService],
-    controllers: [MealsController]
+    controllers: [MealsController],
+    exports: [MealsService]
 })
 export class MealsModule {}

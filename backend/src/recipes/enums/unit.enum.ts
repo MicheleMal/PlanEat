@@ -1,6 +1,8 @@
 export enum Unit{
     G = "g",
-    ML = "ml",
     KG = "kg",
-    QB = "qb"
+    ML = "ml",
+    L = "l",
+    QB = "qb",
+    PZ = "pz"
 }

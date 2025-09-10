@@ -65,6 +65,7 @@ export class MealsService {
                     date: "ASC",
                     mealType: "ASC",
                 },
+                relations: ["mealRecipe", "mealRecipe.recipe", "mealRecipe.recipe.recipeIngredient"],
             });
         } else {
             meals = await this.mealRepository.find({

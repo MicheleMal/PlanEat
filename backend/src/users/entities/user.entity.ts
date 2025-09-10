@@ -1,5 +1,6 @@
 import { Meal } from "src/meals/entity/meal.entity";
 import { Recipe } from "src/recipes/entities/recipe.entity";
+import { ShoppingList } from "src/shoppingList/entities/shoppingList.entity";
 import {
     Column,
     CreateDateColumn,
@@ -47,4 +48,7 @@ export class User {
 
     @OneToMany(() => Meal, (meal) => meal.user)
     meals: Meal[];
+
+    @OneToMany(() => ShoppingList, (shoppingList) => shoppingList.user)
+    shoppingList: ShoppingList[];
 }

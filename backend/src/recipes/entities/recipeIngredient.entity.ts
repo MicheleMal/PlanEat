@@ -33,7 +33,7 @@ export class RecipeIngredient {
         type: "enum",
         enum: Unit,
         enumName: "unit",
-        default: Unit.G,
+        default: Unit.PZ,
         nullable: false
     })
     unit: Unit;

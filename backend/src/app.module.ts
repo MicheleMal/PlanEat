@@ -13,6 +13,9 @@ import { RecipesModule } from "./recipes/recipes.module";
 import { MealsModule } from "./meals/meals.module";
 import { Meal } from "./meals/entity/meal.entity";
 import { MealRecipe } from "./meals/entity/mealRecipe.entity";
+import { ShoppingList } from "./shoppingList/entities/shoppingList.entity";
+import { ShoppingListItem } from "./shoppingList/entities/shoppingListItem.entity";
+import { ShoppingListModule } from "./shoppingList/shopping-list.module";
 
 @Module({
     imports: [
@@ -33,14 +36,17 @@ import { MealRecipe } from "./meals/entity/mealRecipe.entity";
                 RecipeIngredient,
                 Meal,
                 MealRecipe,
+                ShoppingList,
+                ShoppingListItem,
             ],
             synchronize: true,
-            //logging: true
+            //logging: ["query"]
         }),
         AuthModule,
         IngredientsModule,
         RecipesModule,
         MealsModule,
+        ShoppingListModule,
     ],
     controllers: [AppController],
     providers: [AppService],
