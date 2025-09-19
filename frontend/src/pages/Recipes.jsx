@@ -17,6 +17,7 @@ export default function Recipes() {
 
     // Selezione modal recipe
     const [selected, setSelected] = useState(null);
+
     // Aprire e chiudere form per creare o modificare la ricetta
     const [showForm, setShowForm] = useState({
         editing: false,
@@ -39,7 +40,6 @@ export default function Recipes() {
     };
 
     // Modifica ricetta
-    //? Da rivedere
     const onUpdateRecipe = async (updatedRecipe, id) => {
         const updatedRecipeObject = {};
 
@@ -120,27 +120,26 @@ export default function Recipes() {
 
     // 4 caso: Aggiungere nuovo/i ingrediente/i alla ricetta
     const addIngredientRecipe = async (ingredients) => {
-
         const ingredientRecipe = {
             ingredients: [],
         };
 
-        ingredients.forEach((ing)=>{
+        ingredients.forEach((ing) => {
             ingredientRecipe.ingredients.push({
                 name: ing.name,
                 quantity: Number(ing.quantity),
-                unit: ing.unit
-            })
-        })
+                unit: ing.unit,
+            });
+        });
 
-        setShowForm({...showForm, addIngredient: false})
-        setSelected(false)
+        setShowForm({ ...showForm, addIngredient: false });
+        setSelected(false);
 
         try {
-            await updateRecipe(ingredientRecipe, selected.id)
-            setRecipes(await getRecipes())
+            await updateRecipe(ingredientRecipe, selected.id);
+            setRecipes(await getRecipes());
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
     };
 
@@ -243,7 +242,6 @@ export default function Recipes() {
                 )}
 
                 {/* Modale inserire nuovo ingrediente alla ricetta */}
-                {/* //TODO: CONTINUARE */}
                 {showForm.addIngredient === true && (
                     <ModalAddIngredientRecipe
                         setShowForm={setShowForm}

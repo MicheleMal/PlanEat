@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { searchIngredient } from "../service/recipes";
 
-export default function AddIngredients({ setformDataRecipe, formDataRecipe }) {
+export default function AddIngredients({ ingredients, onAddIngredient }) {
     const unit = ["g", "kg", "ml", "l", "pz", "qb"];
     const [listIngredient, setListIngredient] = useState([]);
 
@@ -31,10 +31,7 @@ export default function AddIngredients({ setformDataRecipe, formDataRecipe }) {
 
         if (!formDataIngredient.name.trim()) return;
 
-        setformDataRecipe({
-            ...formDataRecipe,
-            recipeIngredient: [...formDataRecipe.recipeIngredient, formDataIngredient],
-        });
+        onAddIngredient(formDataIngredient);
 
         setFormDataIngredient({
             name: "",
@@ -45,10 +42,7 @@ export default function AddIngredients({ setformDataRecipe, formDataRecipe }) {
 
     return (
         <>
-            <form
-                className="bg-gray-800 p-3 rounded-lg space-y-2"
-                onSubmit={handleSubmitIngredient}
-            >
+            <div className="bg-gray-800 p-3 rounded-lg space-y-2">
                 <h3 className="text-white font-semibold">Ingredienti</h3>
                 <input
                     type="text"
@@ -102,13 +96,14 @@ export default function AddIngredients({ setformDataRecipe, formDataRecipe }) {
                 </div>
 
                 <ul className="text-gray-300 list-disc list-inside">
-                    {(formDataRecipe.recipeIngredient || []).map((ing, i) => (
-                        <li key={i}>
-                            {ing.name} - {ing.quantity} {ing.unit}
-                        </li>
-                    ))}
+                    {ingredients.length > 0 &&
+                        ingredients.map((ing, i) => (
+                            <li key={i}>
+                                {ing.name} - {ing.quantity} {ing.unit}
+                            </li>
+                        ))}
                 </ul>
-            </form>
+            </div>
         </>
     );
 }

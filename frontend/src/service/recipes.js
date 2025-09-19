@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoicHJvdmFAZ21haWwuY29tIiwiaWF0IjoxNzU2ODI5MjAzfQ.jDDJplGZ96LSs3E2fA0_yZyUUGuOml97rLJiLMKafKM";
+const token = localStorage.getItem("token");
 
 const url = "http://127.0.0.1:3000/";
 
@@ -62,12 +61,12 @@ export const deleteRecipe = async (id) => {
     return true;
 };
 
-export const searchIngredient = async (name) =>{
-    const {data} = await axios.get(`${url}ingredients`, {
+export const searchIngredient = async (name) => {
+    const { data } = await axios.get(`${url}ingredients`, {
         params: {
-            search: name
-        }
-    })
+            search: name,
+        },
+    });
 
-    return data
-}
+    return data;
+};

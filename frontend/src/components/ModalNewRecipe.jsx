@@ -46,21 +46,21 @@ export default function ModelNewRecipe({ setShowForm, addRecipe }) {
                 <h2 className="text-2xl font-bold text-white mb-4">
                     Nuova Ricetta
                 </h2>
-                <div className="space-y-4">
+                <div>
                     <input
                         type="text"
                         placeholder="Titolo"
                         name="title"
                         value={formDataRecipe.title}
                         onChange={handleInputRecipeChange}
-                        className="w-full px-3 py-2 rounded-lg bg-gray-800 text-white"
+                        className="w-full mb-4 px-3 py-2 rounded-lg bg-gray-800 text-white"
                     />
                     <textarea
                         placeholder="Descrizione"
                         name="description"
                         value={formDataRecipe.description}
                         onChange={handleInputRecipeChange}
-                        className="w-full px-3 py-2 rounded-lg bg-gray-800 text-white"
+                        className="w-full mb-4 px-3 py-2 rounded-lg bg-gray-800 text-white"
                     />
                     <input
                         type="number"
@@ -69,15 +69,27 @@ export default function ModelNewRecipe({ setShowForm, addRecipe }) {
                         name="prepTime"
                         value={formDataRecipe.prepTime?.toString()}
                         onChange={handleInputRecipeChange}
-                        className="w-full px-3 py-2 rounded-lg bg-gray-800 text-white"
+                        className="w-full mb-4 px-3 py-2 rounded-lg bg-gray-800 text-white"
                     />
 
                     {/* Aggiungi ingredienti */}
-                    <AddIngredients setformDataRecipe={setformDataRecipe} formDataRecipe={formDataRecipe}></AddIngredients>
+                    <AddIngredients
+                        ingredients={formDataRecipe.recipeIngredient}
+                        onAddIngredient={(newIng) => {
+                            setformDataRecipe({
+                                ...formDataRecipe,
+                                recipeIngredient: [
+                                    ...formDataRecipe.recipeIngredient,
+                                    newIng,
+                                ],
+                            });
+                        }}
+                    ></AddIngredients>
 
                     <button
+                        type="button"
                         onClick={handleSubmit}
-                        className="w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-white"
+                        className="w-full mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-white"
                     >
                         Salva Ricetta
                     </button>
