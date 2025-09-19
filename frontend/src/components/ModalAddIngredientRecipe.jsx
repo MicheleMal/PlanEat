@@ -1,38 +1,23 @@
 import { X } from "lucide-react";
 import { useState } from "react";
-import type { Recipe } from "../types/recipe";
-import type { Ingredient } from "../types/ingredient";
 
-interface ModelNewRecipeProps {
-    setShowForm: (value: boolean) => void;
-    addRecipe: (value: Recipe) => void;
-}
-
-export default function ModelNewRecipe({
+export default function ModalAddIngredientRecipe({
     setShowForm,
-    addRecipe,
-}: ModelNewRecipeProps) {
+    addIngredientRecipe,
+    idRecipe,
+}) {
     const unit = ["g", "kg", "ml", "l", "pz", "qb"];
 
     const suggerimentiIngredienti = [
-        "Pomodoro",
-        "Pomodori secchi",
-        "Cipolla",
-        "Aglio",
-        "Olio d'oliva",
-        "Sale",
-        "Pepe",
-        "Basilico",
-        "Pasta",
-        "Mozzarella",
+        {
+            name: "Pomodoro",
+            ingredientId: 17,
+        },
+        {
+            name: "Aglio",
+            ingredientId: 13
+        }
     ];
-
-    const [formDataRecipe, setformDataRecipe] = useState<Recipe>({
-        title: "",
-        description: "",
-        prepTime: 0,
-        recipeIngredient: [] as Ingredient[],
-    });
 
     const [formDataIngredient, setFormDataIngredient] = useState({
         name: "",
@@ -40,22 +25,9 @@ export default function ModelNewRecipe({
         unit: "g",
     });
 
-    const handleInputRecipeChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-    ) => {
-        const { name, value } = e.target;
+    const [ingredients, setIngrediens] = useState([]);
 
-        setformDataRecipe({
-            ...formDataRecipe,
-            [name]: value,
-        });
-    };
-
-    const handelInputIngredientsChange = (
-        e: React.ChangeEvent<
-            HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-        >
-    ) => {
+    const handleInputChange = (e) => {
         const { name, value } = e.target;
 
         setFormDataIngredient({
@@ -64,29 +36,17 @@ export default function ModelNewRecipe({
         });
     };
 
-    const handleSubmit = (e?: React.FormEvent) => {
-        e?.preventDefault();
-        addRecipe(formDataRecipe);
-        setformDataRecipe({
-            title: "",
-            description: "",
-            prepTime: 0,
-            recipeIngredient: [],
-        });
-    };
-
-    const handleSubmitIngredient = (e?: React.FormEvent) => {
-        e?.preventDefault();
-
-        if (!formDataIngredient.name.trim()) return;
-
-        setformDataRecipe({
-            ...formDataRecipe,
-            recipeIngredient: [
-                ...formDataRecipe.recipeIngredient,
-                formDataIngredient,
-            ],
-        });
+    const addIngredient = () => {
+       
+                setIngrediens([
+                    ...ingredients,
+                    {
+                        name: formDataIngredient.name,
+                        quantity: formDataIngredient.quantity,
+                        unit: formDataIngredient.unit,
+                    },
+                ]);
+    
 
         setFormDataIngredient({
             name: "",
@@ -100,44 +60,21 @@ export default function ModelNewRecipe({
             <div className="bg-gray-900 rounded-xl p-6 w-full max-w-xl relative shadow-lg overflow-y-auto max-h-[90vh]">
                 <button
                     className="absolute top-3 right-3 text-gray-400 hover:text-white"
-                    onClick={() => setShowForm(false)}
+                    onClick={() =>
+                        setShowForm((prev) => ({
+                            ...prev,
+                            addIngredient: false,
+                        }))
+                    }
                 >
                     <X className="h-6 w-6" />
                 </button>
                 <h2 className="text-2xl font-bold text-white mb-4">
-                    Nuova Ricetta
+                    Nuovi Ingredienti
                 </h2>
                 <div className="space-y-4">
-                    <input
-                        type="text"
-                        placeholder="Titolo"
-                        name="title"
-                        value={formDataRecipe.title}
-                        onChange={handleInputRecipeChange}
-                        className="w-full px-3 py-2 rounded-lg bg-gray-800 text-white"
-                    />
-                    <textarea
-                        placeholder="Descrizione"
-                        name="description"
-                        value={formDataRecipe.description}
-                        onChange={handleInputRecipeChange}
-                        className="w-full px-3 py-2 rounded-lg bg-gray-800 text-white"
-                    />
-                    <input
-                        type="number"
-                        min={0}
-                        placeholder="Tempo di preparazione (minuti)"
-                        name="prepTime"
-                        value={formDataRecipe.prepTime}
-                        onChange={handleInputRecipeChange}
-                        className="w-full px-3 py-2 rounded-lg bg-gray-800 text-white"
-                    />
-
                     {/* Aggiungi ingredienti */}
-                    <form
-                        className="bg-gray-800 p-3 rounded-lg space-y-2"
-                        onSubmit={handleSubmitIngredient}
-                    >
+                    <form className="bg-gray-800 p-3 rounded-lg space-y-2">
                         <h3 className="text-white font-semibold">
                             Ingredienti
                         </h3>
@@ -146,21 +83,21 @@ export default function ModelNewRecipe({
                             placeholder="Ingrediente"
                             name="name"
                             value={formDataIngredient.name}
-                            onChange={handelInputIngredientsChange}
+                            onChange={handleInputChange}
                             className="w-full px-3 py-2 rounded-lg bg-gray-700 text-white"
                             list="suggerimenti"
                         />
                         <datalist id="suggerimenti">
                             {suggerimentiIngredienti
                                 .filter((ing) =>
-                                    ing
+                                    ing.name
                                         .toLowerCase()
                                         .includes(
                                             formDataIngredient.name.toLowerCase()
                                         )
                                 )
                                 .map((ing, i) => (
-                                    <option key={i} value={ing} />
+                                    <option key={i} value={ing.name} />
                                 ))}
                         </datalist>
 
@@ -170,13 +107,13 @@ export default function ModelNewRecipe({
                                 placeholder="Quantità"
                                 name="quantity"
                                 value={formDataIngredient.quantity}
-                                onChange={handelInputIngredientsChange}
+                                onChange={handleInputChange}
                                 className="w-1/3 px-3 py-2 rounded-lg bg-gray-700 text-white"
                             />
                             <select
                                 name="unit"
                                 value={formDataIngredient.unit}
-                                onChange={handelInputIngredientsChange}
+                                onChange={handleInputChange}
                                 className="w-1/3 px-3 py-2 rounded-lg bg-gray-700 text-white"
                             >
                                 {unit.map((u) => (
@@ -187,7 +124,7 @@ export default function ModelNewRecipe({
                             </select>
                             <button
                                 type="button"
-                                onClick={handleSubmitIngredient}
+                                onClick={addIngredient}
                                 className="w-1/3 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-white px-3"
                             >
                                 Aggiungi
@@ -195,18 +132,18 @@ export default function ModelNewRecipe({
                         </div>
 
                         <ul className="text-gray-300 list-disc list-inside">
-                            {(formDataRecipe.recipeIngredient || []).map(
-                                (ing, i) => (
-                                    <li key={i}>
-                                        {ing.name} - {ing.quantity} {ing.unit}
-                                    </li>
-                                )
-                            )}
+                            {(ingredients || []).map((ing, i) => (
+                                <li key={i}>
+                                    {ing.name} - {ing.quantity} {ing.unit}
+                                </li>
+                            ))}
                         </ul>
                     </form>
 
                     <button
-                        onClick={handleSubmit}
+                        onClick={() =>
+                            addIngredientRecipe(ingredients, idRecipe)
+                        }
                         className="w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-white"
                     >
                         Salva Ricetta
