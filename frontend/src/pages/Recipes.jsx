@@ -27,6 +27,7 @@ export default function Recipes() {
         create: false,
         addIngredient: false,
     });
+
     // Caricamento
     const [loading, setLoading] = useState(true);
 
@@ -185,7 +186,7 @@ export default function Recipes() {
                         onClick={() =>
                             setShowForm({ ...showForm, create: true })
                         }
-                        className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-white"
+                        className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 hover:cursor-pointer rounded-lg text-white"
                     >
                         <Plus className="h-5 w-5" /> Nuova Ricetta
                     </button>

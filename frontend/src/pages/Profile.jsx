@@ -76,7 +76,7 @@ export default function Profile() {
                         <button
                             type="button"
                             onClick={onUpdateProfile}
-                            className="w-full mt-4 px-4 py-2 bg-yellow-600 hover:bg-yellow-500 rounded-lg text-white"
+                            className="w-full mt-4 px-4 py-2 bg-yellow-600 hover:bg-yellow-500 hover:cursor-pointer rounded-lg text-white"
                         >
                             Modifica
                         </button>
@@ -86,14 +86,14 @@ export default function Profile() {
                                 logout();
                                 navigate("/");
                             }}
-                            className="w-full mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-white"
+                            className="w-full mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-500 hover:cursor-pointer rounded-lg text-white"
                         >
                             Logout
                         </button>
                         <button
                             type="button"
                             onClick={onDeleteProfile}
-                            className="w-full mt-4 px-4 py-2 bg-red-600 hover:bg-red-500 rounded-lg text-white"
+                            className="w-full mt-4 px-4 py-2 bg-red-600 hover:bg-red-500 hover:cursor-pointer rounded-lg text-white"
                         >
                             ELimina Profilo
                         </button>

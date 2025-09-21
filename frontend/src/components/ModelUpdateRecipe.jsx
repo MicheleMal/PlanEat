@@ -47,7 +47,7 @@ export default function ModalUpdateRecipe({
     return (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
             <div className="bg-gray-900 rounded-xl p-6 w-full max-w-xl relative shadow-lg overflow-y-auto max-h-[90vh]">
-                <button className="absolute top-3 right-3 text-gray-400 hover:text-white">
+                <button className="absolute top-3 right-3 text-gray-400 hover:text-white hover:cursor-pointer">
                     <X
                         className="h-6 w-6"
                         onClick={() =>
@@ -180,7 +180,7 @@ export default function ModalUpdateRecipe({
                                             </span>
                                             {/* X per eliminare */}
                                             <button
-                                                className="ml-3 px-2 bg-red-600 hover:bg-red-500 rounded text-white"
+                                                className="ml-3 px-2 bg-red-600 hover:bg-red-500 hover:cursor-pointer rounded text-white"
                                                 onClick={(e) => {
                                                     e.preventDefault();
                                                     removeIngredientRecipe(
@@ -200,13 +200,13 @@ export default function ModalUpdateRecipe({
                     </form>
 
                     <button
-                        className="w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-white"
+                        className="w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-500 hover:cursor-pointer rounded-lg text-white"
                         onClick={() => onUpdate(formUpdatedRecipe, recipe.id)}
                     >
                         Modifica Ricetta
                     </button>
                     <button
-                        className="w-full px-4 py-2 bg-orange-500 hover:bg-orange-500 rounded-lg text-white"
+                        className="w-full px-4 py-2 bg-orange-500 hover:bg-orange-500 hover:cursor-pointer rounded-lg text-white"
                         onClick={() =>
                             setShowForm((prev) => ({ ...prev, editing: false, addIngredient: true}))
                         }

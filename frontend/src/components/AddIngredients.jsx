@@ -89,7 +89,7 @@ export default function AddIngredients({ ingredients, onAddIngredient }) {
                     <button
                         type="button"
                         onClick={handleSubmitIngredient}
-                        className="w-1/3 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-white px-3"
+                        className="w-1/3 bg-indigo-600 hover:bg-indigo-500 hover:cursor-pointer rounded-lg text-white px-3"
                     >
                         Aggiungi
                     </button>

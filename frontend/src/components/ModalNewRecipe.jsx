@@ -36,7 +36,7 @@ export default function ModelNewRecipe({ setShowForm, addRecipe }) {
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
             <div className="bg-gray-900 rounded-xl p-6 w-full max-w-xl relative shadow-lg overflow-y-auto max-h-[90vh]">
                 <button
-                    className="absolute top-3 right-3 text-gray-400 hover:text-white"
+                    className="absolute top-3 right-3 text-gray-400 hover:text-white hover:cursor-pointer"
                     onClick={() =>
                         setShowForm((prev) => ({ ...prev, create: false }))
                     }
@@ -89,7 +89,7 @@ export default function ModelNewRecipe({ setShowForm, addRecipe }) {
                     <button
                         type="button"
                         onClick={handleSubmit}
-                        className="w-full mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-white"
+                        className="w-full mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 hover:cursor-pointer rounded-lg text-white"
                     >
                         Salva Ricetta
                     </button>
