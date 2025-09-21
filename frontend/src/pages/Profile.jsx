@@ -2,27 +2,29 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { deleteProfile, getProfile, updateProfile } from "../service/user";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Profile() {
+    const { token, logout } = useAuth();
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const getUser = async () => {
-            try {
-                const data = await getProfile();
-                setUser(data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
         getUser();
-    }, []);
+    });
 
-    const handleSubmit = async () => {
+    const getUser = async () => {
         try {
-            const data = await updateProfile(user);
+            const data = await getProfile(token);
+            setUser(data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const onUpdateProfile = async () => {
+        try {
+            const data = await updateProfile(user, token);
 
             setUser(data);
         } catch (error) {
@@ -32,10 +34,10 @@ export default function Profile() {
 
     const onDeleteProfile = async () => {
         try {
-            await deleteProfile(user);
+            await deleteProfile(user, token);
 
-            navigate("/")
-            localStorage.clear()
+            navigate("/");
+            localStorage.removeItem("token");
         } catch (error) {
             console.error(error);
         }
@@ -73,7 +75,7 @@ export default function Profile() {
 
                         <button
                             type="button"
-                            onClick={handleSubmit}
+                            onClick={onUpdateProfile}
                             className="w-full mt-4 px-4 py-2 bg-yellow-600 hover:bg-yellow-500 rounded-lg text-white"
                         >
                             Modifica
@@ -81,7 +83,7 @@ export default function Profile() {
                         <button
                             type="button"
                             onClick={() => {
-                                localStorage.clear();
+                                logout();
                                 navigate("/");
                             }}
                             className="w-full mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-white"

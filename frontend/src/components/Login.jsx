@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { signin, signup } from "../service/auth";
 import { useNavigate } from "react-router-dom";
+import {useAuth} from "../context/AuthContext"
 
 export default function Login() {
+    const {login} = useAuth()
+
     const [user, setUser] = useState({
         name: "",
         email: "",
         password: "",
     });
-
     const [error, setError] = useState("");
-
     const [isLogin, setIsLogin] = useState(true);
+
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -21,7 +23,7 @@ export default function Login() {
             try {
                 const { access_token } = await signin(user);
 
-                localStorage.setItem("token", access_token);
+                login(access_token)
 
                 navigate("/");
             } catch (error) {

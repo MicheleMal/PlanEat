@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Menu } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
-    const [token, setToken] = useState(false)
+    const {isAuth} = useAuth()
 
     const links = [
         { name: "Home", path: "/" },
@@ -13,10 +14,6 @@ export default function Navbar() {
         { name: "Pasti", path: "/pasti" },
         { name: "Liste della spesa", path: "/liste" },
     ];
-
-    useEffect(()=>{
-        setToken(localStorage.getItem("token"))
-    },[token])
 
     return (
         <nav className="bg-gray-900 text-gray-300 shadow-md">
@@ -50,7 +47,7 @@ export default function Navbar() {
                     {/* Login aligned right */}
                     <div className="hidden md:flex">
                         <Link
-                            to={token ? "/profile" : "/login"}
+                            to={isAuth ? "/profile" : "/login"}
                             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 
                 ${
                     location.pathname === "/login"
@@ -58,7 +55,7 @@ export default function Navbar() {
                         : "text-gray-400 hover:text-white"
                 }`}
                         >
-                            {token ? "Profilo" : "Login"}
+                            {isAuth ? "Profilo" : "Login"}
                         </Link>
                     </div>
 
@@ -94,7 +91,7 @@ export default function Navbar() {
                     ))}
 
                     <Link
-                        to={token ? "/profile" : "/login"}
+                        to={isAuth ? "/profile" : "/login"}
                         onClick={() => setIsOpen(false)}
                         className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 
               ${
@@ -103,7 +100,7 @@ export default function Navbar() {
                       : "text-gray-400 hover:text-white"
               }`}
                     >
-                        {token ? "Profilo" : "Login"}
+                        {isAuth ? "Profilo" : "Login"}
                     </Link>
                 </div>
             )}

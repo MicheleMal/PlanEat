@@ -1,9 +1,8 @@
 import axios from "axios";
 
 const url = "http://127.0.0.1:3000/users/me";
-const token = localStorage.getItem("token");
 
-export const getProfile = async () => {
+export const getProfile = async (token) => {
     const { data } = await axios.get(`${url}`, {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -13,7 +12,7 @@ export const getProfile = async () => {
     return data;
 };
 
-export const updateProfile = async (updatedUser) => {
+export const updateProfile = async (updatedUser, token) => {
     const { data } = await axios.patch(`${url}`, updatedUser, {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -23,7 +22,7 @@ export const updateProfile = async (updatedUser) => {
     return data
 };
 
-export const deleteProfile = async () => {
+export const deleteProfile = async (token) => {
     const { data } = await axios.delete(`${url}`, {
         headers: {
             Authorization: `Bearer ${token}`,

@@ -1,10 +1,8 @@
 import axios from "axios";
 
-const token = localStorage.getItem("token");
-
 const url = "http://127.0.0.1:3000/";
 
-export const getRecipes = async () => {
+export const getRecipes = async (token) => {
     const { data } = await axios.get(`${url}recipes`, {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -14,7 +12,7 @@ export const getRecipes = async () => {
     return data;
 };
 
-export const createRecipe = async (newRecipe) => {
+export const createRecipe = async (newRecipe, token) => {
     newRecipe.prepTime = Number(newRecipe.prepTime);
     newRecipe.recipeIngredient.map((ing) => {
         ing.quantity = Number(ing.quantity);
@@ -33,7 +31,7 @@ export const createRecipe = async (newRecipe) => {
     return data;
 };
 
-export const updateRecipe = async (recipe, id) => {
+export const updateRecipe = async (recipe, id, token) => {
     if (recipe.prepTime) {
         recipe.prepTime = Number(recipe.prepTime);
     } else if (recipe.recipeIngredient) {
@@ -51,7 +49,7 @@ export const updateRecipe = async (recipe, id) => {
     return data;
 };
 
-export const deleteRecipe = async (id) => {
+export const deleteRecipe = async (id, token) => {
     await axios.delete(`${url}recipes/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`,

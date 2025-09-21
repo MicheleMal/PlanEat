@@ -6,6 +6,7 @@ import Home from './pages/Home.jsx'
 import Recipes from './pages/Recipes.jsx'
 import Authentication from './pages/Authentication.jsx'
 import Profile from './pages/Profile.jsx'
+import { AuthProvider } from './context/AuthContext.jsx'
 
 const router = createBrowserRouter([
   {
@@ -26,8 +27,11 @@ const router = createBrowserRouter([
   }
 ])
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <RouterProvider router={router}/>
-  </StrictMode>,
-)
+createRoot(document.getElementById("root")).render(
+    <AuthProvider>
+        <StrictMode>
+            <RouterProvider router={router} />
+        </StrictMode>
+        ,
+    </AuthProvider>
+);

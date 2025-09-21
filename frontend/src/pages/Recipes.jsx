@@ -11,8 +11,11 @@ import {
 } from "../service/recipes.js";
 import ModalUpdateRecipe from "../components/ModelUpdateRecipe.jsx";
 import ModalAddIngredientRecipe from "../components/ModalAddIngredientRecipe.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export default function Recipes() {
+    const { token } = useAuth();
+
     const [recipes, setRecipes] = useState([]);
 
     // Selezione modal recipe
@@ -31,8 +34,8 @@ export default function Recipes() {
     // Inserire nuova ricetta
     const addRecipe = async (newRecipe) => {
         try {
-            await createRecipe(newRecipe);
-            const recipes = await getRecipes();
+            await createRecipe(newRecipe, token);
+            const recipes = await getRecipes(token);
             setRecipes(recipes);
         } catch (error) {
             console.error(error);
@@ -86,8 +89,8 @@ export default function Recipes() {
         setSelected(false);
 
         try {
-            await updateRecipe(updatedRecipeObject, id);
-            setRecipes(await getRecipes());
+            await updateRecipe(updatedRecipeObject, id, token);
+            setRecipes(await getRecipes(token));
         } catch (error) {
             console.error(error);
         }
@@ -111,8 +114,8 @@ export default function Recipes() {
         setShowForm({ ...showForm, editing: false });
         setSelected(false);
         try {
-            await updateRecipe(deletedIngredientRecipe, id);
-            setRecipes(await getRecipes());
+            await updateRecipe(deletedIngredientRecipe, id, token);
+            setRecipes(await getRecipes(token));
         } catch (error) {
             console.error(error);
         }
@@ -136,8 +139,8 @@ export default function Recipes() {
         setSelected(false);
 
         try {
-            await updateRecipe(ingredientRecipe, selected.id);
-            setRecipes(await getRecipes());
+            await updateRecipe(ingredientRecipe, selected.id, token);
+            setRecipes(await getRecipes(token));
         } catch (error) {
             console.error(error);
         }
@@ -146,7 +149,7 @@ export default function Recipes() {
     // Elimina ricetta
     const onDeleteRecipe = async (id) => {
         try {
-            await deleteRecipe(id);
+            await deleteRecipe(id, token);
 
             const newRecipes = recipes.filter((recipe) => recipe.id !== id);
 
@@ -160,7 +163,7 @@ export default function Recipes() {
     useEffect(() => {
         const fetchRecipes = async () => {
             try {
-                const data = await getRecipes();
+                const data = await getRecipes(token);
                 setRecipes(data);
             } catch (error) {
                 console.error(error);
