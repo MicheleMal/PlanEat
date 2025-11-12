@@ -1,9 +1,21 @@
 import axios from "axios";
 
-const url = "http://127.0.0.1:3000/";
+const apiUrl = import.meta.env.VITE_API_URL
+
+const url = `${apiUrl}/`;
 
 export const getRecipes = async (token) => {
     const { data } = await axios.get(`${url}recipes`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    return data;
+};
+
+export const getRecipesById = async (token, id) => {
+    const { data } = await axios.get(`${url}recipes/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },

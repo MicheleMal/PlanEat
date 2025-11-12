@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const url = "http://127.0.0.1:3000/auth/";
+const apiUrl = import.meta.env.VITE_API_URL
+
+const url = `${apiUrl}/auth/`;
 
 export const signin = async (user) => {
     const { data } = await axios.post(`${url}signin`, {

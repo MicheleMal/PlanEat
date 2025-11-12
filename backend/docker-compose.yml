@@ -1,0 +1,44 @@
+services:
+  nestjs:
+    build: .
+    container_name: plan-eat_api
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    depends_on:
+      - mysql
+    volumes:
+      - .:/app
+    command: ["npm", "run", "start:dev"]
+
+  mysql:
+    image: mysql:8.0
+    container_name: plan-eat_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: plan-eat_phpmyadmin
+    restart: always
+    ports:
+      - "8000:80"
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=${DB_USER}
+      - PMA_PASSWORD=${DB_PASSWORD}
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:

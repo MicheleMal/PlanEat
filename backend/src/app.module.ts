@@ -24,10 +24,10 @@ import { ShoppingListModule } from "./shoppingList/shopping-list.module";
         }),
         TypeOrmModule.forRoot({
             type: "mysql",
-            host: "localhost",
+            host: "mysql",
             port: 3306,
             username: "root",
-            password: "",
+            password: "030801mM@",
             database: "PlanEat",
             entities: [
                 User,
