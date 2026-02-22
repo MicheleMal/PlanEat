@@ -10,6 +10,7 @@ import {
     ApiOperation,
     ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
+import { User } from "src/users/entities/user.entity";
 
 @Controller("auth")
 export class AuthController {
@@ -26,7 +27,9 @@ export class AuthController {
         description: "Registrazione avvenuta con successo",
     })
     @Post("signup")
-    async signup(@Body(ValidationPipe) createUserDto: CreateUserDto) {
+    async signup(
+        @Body(ValidationPipe) createUserDto: CreateUserDto,
+    ): Promise<Omit<User, "password">> {
         return this.authService.signup(createUserDto);
     }
 
@@ -46,7 +49,9 @@ export class AuthController {
         },
     })
     @Post("signin")
-    async signin(@Body(ValidationPipe) loginDto: LoginDto) {
+    async signin(
+        @Body(ValidationPipe) loginDto: LoginDto,
+    ): Promise<{access_token: string}>{
         return this.authService.signin(loginDto);
     }
 }
