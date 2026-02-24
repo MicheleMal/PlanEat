@@ -1,6 +1,7 @@
 import { Controller, Get, Query } from "@nestjs/common";
 import { IngredientsService } from "../service/ingredients.service";
 import { ApiOkResponse, ApiOperation, ApiQuery } from "@nestjs/swagger";
+import { Ingredient } from "../entity/ingredient.entity";
 
 @Controller("ingredients")
 export class IngredientsController {
@@ -18,7 +19,7 @@ export class IngredientsController {
         description: "Lista ingredienti",
     })
     @Get()
-    getIngredients(@Query("search") name: string) {
+    getIngredients(@Query("search") name: string): Promise<Ingredient[]> {
         return this.ingredientsService.getIngredients(name);
     }
 }

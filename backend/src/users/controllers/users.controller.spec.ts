@@ -37,7 +37,7 @@ describe("UsersController", () => {
         controller = module.get<UsersController>(UsersController);
     });
 
-    it("should return user profile", async () => {
+    it("should call service get user profile", async () => {
         const fakeUser = {
             email: "test@test.com",
             name: "Mario",

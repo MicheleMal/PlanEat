@@ -120,7 +120,7 @@ describe("UsersService", () => {
         });
     });
 
-    describe("getProgile", () => {
+    describe("getProfile", () => {
         it("should return the logged in user information", async () => {
             mockUserRepository.findOne.mockResolvedValue({
                 email: fakeUser.email,
