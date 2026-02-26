@@ -7,8 +7,6 @@ import { CreateRecipeDto } from "../dto/create-recipe.dto";
 import { Recipe } from "../entities/recipe.entity";
 import { UpdateRecipeDto } from "../dto/update-recipe.dto";
 
-//? Controllare campi univoci
-
 @Injectable()
 export class RecipesService {
     constructor(
@@ -81,7 +79,7 @@ export class RecipesService {
         return recipe;
     }
 
-    // Ottieni tutte le ricette di un determinato utente e/o effettuando una ricerca tramite titolo e/o tramite ingrediente
+    // Ottieni tutte le ricette di un determinato utente e/o effettuando una ricerca tramite titolo
     async getRecipes(req: Request, title?: string): Promise<Recipe[]> {
         const { userId } = req["user"];
 

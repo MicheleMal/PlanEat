@@ -46,6 +46,7 @@ export class RecipesController {
             example: {
                 id: 21,
                 title: "Pasta al pomodoro",
+                description: "Pasta al pomodoro fresco",
                 prepTime: 60,
                 user: {
                     id: 2,

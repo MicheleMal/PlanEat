@@ -7,7 +7,6 @@ export class UpdateRecipeIngredientDto {
     @IsString()
     name?: string;
 
-
     @IsOptional()
     @IsNumber()
     quantity?: number;
@@ -22,6 +21,6 @@ export class UpdateRecipeIngredientDto {
 
     @IsOptional()
     @IsBoolean()
-    delete?: false;
+    delete?: boolean;
 
 }
