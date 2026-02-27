@@ -144,7 +144,7 @@ export class MealsService {
         return meal;
     }
 
-    // Eliminare ricetta
+    // Eliminare un pasto specifico
     async deleteMeal(req: Request, id: number): Promise<boolean> {
         const { userId } = req["user"];
 

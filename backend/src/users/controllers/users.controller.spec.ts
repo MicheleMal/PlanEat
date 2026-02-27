@@ -30,7 +30,7 @@ describe("UsersController", () => {
         })
             .overrideGuard(AuthGuard)
             .useValue({
-                canActive: jest.fn(() => true),
+                canActivate: jest.fn(() => true),
             })
             .compile();
 
