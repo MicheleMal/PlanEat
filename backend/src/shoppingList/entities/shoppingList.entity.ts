@@ -8,6 +8,7 @@ import {
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
+    UpdateDateColumn,
 } from "typeorm";
 import { ShoppingListItem } from "./shoppingListItem.entity";
 
@@ -19,20 +20,20 @@ export class ShoppingList {
     @Column({
         type: "date",
         nullable: false,
-        unique: true
     })
-    @Index()
     startDate: Date;
 
     @Column({
         type: "date",
         nullable: false,
-        unique: true
     })
     endDate: Date;
 
-    @CreateDateColumn()
+    @CreateDateColumn({ type: "timestamp" })
     createdAt: Date;
+
+    @UpdateDateColumn({ type: "timestamp" })
+    updatedAt: Date;
 
     @ManyToOne(() => User, (user) => user.shoppingList, {
         onDelete: "CASCADE",

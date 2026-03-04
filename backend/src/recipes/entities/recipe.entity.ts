@@ -18,7 +18,6 @@ export class Recipe {
     @Column({
         type: "varchar",
         nullable: false,
-        unique: true,
     })
     title: string;
 

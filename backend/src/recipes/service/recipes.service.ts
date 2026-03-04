@@ -6,6 +6,7 @@ import { IngredientsService } from "src/ingredients/service/ingredients.service"
 import { CreateRecipeDto } from "../dto/create-recipe.dto";
 import { Recipe } from "../entities/recipe.entity";
 import { UpdateRecipeDto } from "../dto/update-recipe.dto";
+import { Unit } from "../enums/unit.enum";
 
 @Injectable()
 export class RecipesService {
@@ -27,16 +28,6 @@ export class RecipesService {
     ): Promise<Recipe> {
         const { userId } = req["user"];
 
-        const recipe = await this.recipeRepository.findOne({
-            where: {
-                title: createRecipeDto.title
-            }
-        })
-
-        if(recipe){
-            throw new ConflictException("Nome ricetta già presente")
-        }
-
         const newRecipe = this.recipeRepository.create({
             ...createRecipeDto,
             user: {
@@ -54,14 +45,21 @@ export class RecipesService {
             const newRecipeIngredient = this.recipeIngredientRepository.create({
                 recipeId: newRecipe.id,
                 ingredientId: ingredient.id,
-                quantity: ing.quantity,
+                quantity: ing.unit !== Unit.QB ? ing.quantity : null,
                 unit: ing.unit,
             });
 
             await this.recipeIngredientRepository.save(newRecipeIngredient);
         }
 
-        return newRecipe;
+        const recipe = await this.recipeRepository.findOne({
+            where: {
+                id: newRecipe.id
+            },
+            relations: ["recipeIngredient", "recipeIngredient.ingredient"],
+        })
+
+        return recipe;
     }
 
     // Ottiene una determinata ricetta tramite id

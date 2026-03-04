@@ -52,7 +52,7 @@ export class UsersService {
             where: {
                 id: userId,
             },
-            select: ["email", "name", "createdAt", "updateAt"],
+            select: ["email", "name", "createdAt", "updatedAt"],
         });
         
         return user;
@@ -74,7 +74,7 @@ export class UsersService {
 
         const user = await this.userRepository.findOne({
             where: { id: userId },
-            select: ["email", "name", "createdAt", "updateAt"],
+            select: ["email", "name", "createdAt", "updatedAt"],
         });
 
         return user;

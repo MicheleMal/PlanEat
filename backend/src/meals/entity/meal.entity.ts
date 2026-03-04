@@ -37,7 +37,7 @@ export class Meal {
     createdAt: Date;
 
     @UpdateDateColumn({ type: "timestamp" })
-    updateAt: Date;
+    updatedAt: Date;
 
     @ManyToOne(() => User, (user) => user.meals, {
         onDelete: "CASCADE",

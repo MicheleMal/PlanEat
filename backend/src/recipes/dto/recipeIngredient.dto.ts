@@ -1,6 +1,7 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsString, Min } from "class-validator";
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from "class-validator";
 import { Unit } from "../enums/unit.enum";
 import { ApiProperty } from "@nestjs/swagger";
+import { IsNull } from "typeorm";
 
 export class RecipeIngredientDto {
     @ApiProperty({
@@ -20,10 +21,8 @@ export class RecipeIngredientDto {
         example: "12",
     })
     @IsNumber()
-    @Min(1, {
-        message: "Puoi inserire una quantità maggiore di 0",
-    })
-    quantity: number;
+    @IsOptional()
+    quantity?: number | null;
 
     @ApiProperty({
         enum: Unit,

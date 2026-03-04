@@ -27,7 +27,7 @@ export class RecipeIngredient {
         type: "int",
         nullable: true
     })
-    quantity: number;
+    quantity: number | null;
 
     @Column({
         type: "enum",

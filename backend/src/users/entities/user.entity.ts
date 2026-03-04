@@ -41,7 +41,7 @@ export class User {
     createdAt: Date;
 
     @UpdateDateColumn({ type: "timestamp" })
-    updateAt: Date;
+    updatedAt: Date;
 
     @OneToMany(() => Recipe, (recipe) => recipe.user)
     recipes: Recipe[];
