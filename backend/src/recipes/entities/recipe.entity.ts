@@ -5,12 +5,14 @@ import {
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
+    Unique,
 } from "typeorm";
 import { User } from "src/users/entities/user.entity";
 import { RecipeIngredient } from "./recipeIngredient.entity";
 import { MealRecipe } from "src/meals/entity/mealRecipe.entity";
 
 @Entity({ name: "recipes" })
+@Unique(["title", "user"])
 export class Recipe {
     @PrimaryGeneratedColumn()
     id: number;

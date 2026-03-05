@@ -7,29 +7,41 @@ import { Repository } from "typeorm";
 export class IngredientsService {
     constructor(
         @InjectRepository(Ingredient)
-        private readonly ingredientRepository: Repository<Ingredient>
+        private readonly ingredientRepository: Repository<Ingredient>,
     ) {}
 
     // Restituisce ingrediente se esiste, altrimenti lo crea
-    async findOrCreate(name: string): Promise<Ingredient>{
+    async findOrCreate(name: string): Promise<Ingredient> {
         const ingredient = await this.ingredientRepository
             .createQueryBuilder("ing")
             .where("LOWER(ing.name) = LOWER(:name)", {
-                name: `${name}`
+                name: `${name}`,
             })
-            .getOne()
+            .getOne();
 
-        if(!ingredient){
-            const newIngredient = this.ingredientRepository.create({
-                name: name
-            })
-
-            await this.ingredientRepository.save(newIngredient)
-
-            return newIngredient
+        if (ingredient) {
+            return ingredient;
         }
-        
-        return ingredient
+
+        try {
+            const newIngredient = this.ingredientRepository.create({
+                name: name,
+            });
+
+            await this.ingredientRepository.save(newIngredient);
+
+            return newIngredient;
+        } catch (error) {
+            if (error.errno === 1062) {
+                return await this.ingredientRepository
+                    .createQueryBuilder("ing")
+                    .where("LOWER(ing.name) = LOWER(:name)", {
+                        name: `${name}`,
+                    })
+                    .getOne();
+            }
+            throw error;
+        }
     }
 
     // Restituisce lista ingredienti altrimenti array vuoto

@@ -15,7 +15,7 @@ export class RecipesService {
         private readonly recipeRepository: Repository<Recipe>,
         @InjectRepository(RecipeIngredient)
         private readonly recipeIngredientRepository: Repository<RecipeIngredient>,
-        private readonly ingredientsService: IngredientsService
+        private readonly ingredientsService: IngredientsService,
     ) {}
 
     /* Crea una nuova ricetta verificando gli ingredienti:
@@ -24,42 +24,50 @@ export class RecipesService {
     */
     async createRecipe(
         createRecipeDto: CreateRecipeDto,
-        req: Request
+        req: Request,
     ): Promise<Recipe> {
         const { userId } = req["user"];
 
-        const newRecipe = this.recipeRepository.create({
-            ...createRecipeDto,
-            user: {
-                id: userId,
-            },
-        });
-
-        await this.recipeRepository.save(newRecipe);
-
-        for (const ing of createRecipeDto.ingredients) {
-            const ingredient = await this.ingredientsService.findOrCreate(
-                ing.name
-            );
-
-            const newRecipeIngredient = this.recipeIngredientRepository.create({
-                recipeId: newRecipe.id,
-                ingredientId: ingredient.id,
-                quantity: ing.unit !== Unit.QB ? ing.quantity : null,
-                unit: ing.unit,
+        try {
+            const newRecipe = this.recipeRepository.create({
+                ...createRecipeDto,
+                user: {
+                    id: userId,
+                },
             });
 
-            await this.recipeIngredientRepository.save(newRecipeIngredient);
+            await this.recipeRepository.save(newRecipe);
+
+            for (const ing of createRecipeDto.ingredients) {
+                const ingredient = await this.ingredientsService.findOrCreate(
+                    ing.name,
+                );
+
+                const newRecipeIngredient =
+                    this.recipeIngredientRepository.create({
+                        recipeId: newRecipe.id,
+                        ingredientId: ingredient.id,
+                        quantity: ing.unit !== Unit.QB ? ing.quantity : null,
+                        unit: ing.unit,
+                    });
+
+                await this.recipeIngredientRepository.save(newRecipeIngredient);
+            }
+
+            const recipe = await this.recipeRepository.findOne({
+                where: {
+                    id: newRecipe.id,
+                },
+                relations: ["recipeIngredient", "recipeIngredient.ingredient"],
+            });
+
+            return recipe;
+        } catch (error) {
+            if (error.errno === 1062) {
+                throw new ConflictException("Titolo già presente");
+            }
+            throw error;
         }
-
-        const recipe = await this.recipeRepository.findOne({
-            where: {
-                id: newRecipe.id
-            },
-            relations: ["recipeIngredient", "recipeIngredient.ingredient"],
-        })
-
-        return recipe;
     }
 
     // Ottiene una determinata ricetta tramite id
@@ -69,7 +77,9 @@ export class RecipesService {
         const recipe = await this.recipeRepository.findOne({
             where: {
                 id: id,
-                user: userId,
+                user: {
+                    id: userId,
+                },
             },
             relations: ["recipeIngredient", "recipeIngredient.ingredient"],
         });
@@ -93,7 +103,7 @@ export class RecipesService {
                 },
                 relations: ["recipeIngredient", "recipeIngredient.ingredient"],
             });
-        }else {
+        } else {
             recipes = await this.recipeRepository.find({
                 where: {
                     user: {
@@ -115,77 +125,86 @@ export class RecipesService {
     async updateRecipe(
         req: Request,
         updateRecipeDto: UpdateRecipeDto,
-        id: number
+        id: number,
     ): Promise<Recipe> {
         const { userId } = req["user"];
 
-        // 1. Modifica campi ricetta
-        const { ingredients, ...recipeFields } = updateRecipeDto;
+        try {
+            // 1. Modifica campi ricetta
+            const { ingredients, ...recipeFields } = updateRecipeDto;
 
-        if (Object.keys(recipeFields).length > 0) {
-            await this.recipeRepository.update(
-                {
+            if (Object.keys(recipeFields).length > 0) {
+                await this.recipeRepository.update(
+                    {
+                        id: id,
+                        user: {
+                            id: userId,
+                        },
+                    },
+                    recipeFields,
+                );
+            }
+
+            if (ingredients && ingredients.length > 0) {
+                for (const ing of updateRecipeDto.ingredients) {
+                    // 2. Modifica campi ingrediente (quantity, unit)
+                    if (ing.ingredientId && !ing.delete) {
+                        await this.recipeIngredientRepository.update(
+                            {
+                                recipeId: id,
+                                ingredientId: ing.ingredientId,
+                            },
+                            ing,
+                        );
+                    }
+
+                    // 3. Aggiungere un nuovo ingrediente alla ricetta
+                    if (!ing.ingredientId && !ing.delete) {
+                        const ingredient =
+                            await this.ingredientsService.findOrCreate(
+                                ing.name,
+                            );
+
+                        const newRecipeIngredient =
+                            this.recipeIngredientRepository.create({
+                                recipeId: id,
+                                ingredientId: ingredient.id,
+                                quantity: ing.quantity,
+                                unit: ing.unit,
+                            });
+
+                        await this.recipeIngredientRepository.save(
+                            newRecipeIngredient,
+                        );
+                    }
+
+                    // 4. Eliminare un ingrediente associato alla ricetta
+                    if (ing.ingredientId && ing.delete) {
+                        await this.recipeIngredientRepository.delete({
+                            recipeId: id,
+                            ingredientId: ing.ingredientId,
+                        });
+                    }
+                }
+            }
+
+            const recipe = await this.recipeRepository.findOne({
+                where: {
                     id: id,
                     user: {
                         id: userId,
                     },
                 },
-                recipeFields
-            );
-        }
+                relations: ["recipeIngredient", "recipeIngredient.ingredient"],
+            });
 
-        if (ingredients && ingredients.length > 0) {
-            for (const ing of updateRecipeDto.ingredients) {
-                // 2. Modifica campi ingrediente (quantity, unit)
-                if (ing.ingredientId && !ing.delete) {
-                    await this.recipeIngredientRepository.update(
-                        {
-                            recipeId: id,
-                            ingredientId: ing.ingredientId,
-                        },
-                        ing
-                    );
-                }
-
-                // 3. Aggiungere un nuovo ingrediente alla ricetta
-                if (!ing.ingredientId && !ing.delete) {
-                    const ingredient =
-                        await this.ingredientsService.findOrCreate(ing.name);
-
-                    const newRecipeIngredient =
-                        this.recipeIngredientRepository.create({
-                            recipeId: id,
-                            ingredientId: ingredient.id,
-                            quantity: ing.quantity,
-                            unit: ing.unit,
-                        });
-
-                    await this.recipeIngredientRepository.save(
-                        newRecipeIngredient
-                    );
-                }
-
-                // 4. Eliminare un ingrediente associato alla ricetta
-                if (ing.ingredientId && ing.delete) {
-                    await this.recipeIngredientRepository.delete({
-                        recipeId: id,
-                        ingredientId: ing.ingredientId,
-                    });
-                }
+            return recipe;
+        } catch (error) {
+            if (error.errno === 1062) {
+                throw new ConflictException("Titolo già presente");
             }
+            throw error;
         }
-
-        const recipe = await this.recipeRepository.findOne({
-            where: {
-                id: id,
-                user: {
-                    id: userId,
-                },
-            },
-            relations: ["recipeIngredient", "recipeIngredient.ingredient"],
-        });
-
-        return recipe;
     }
 
     // Eliminazione ricetta

@@ -7,10 +7,13 @@ import {
     Entity,
     OneToMany,
     PrimaryGeneratedColumn,
+    Unique,
     UpdateDateColumn,
 } from "typeorm";
 
 @Entity({ name: "users" })
+@Unique("UQ_USER_EMAIL", ["email"])
+@Unique("UQ_USER_NAME", ["name"])
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
@@ -19,7 +22,6 @@ export class User {
         type: "varchar",
         length: 100,
         nullable: false,
-        unique: true,
     })
     email: string;
 
@@ -33,7 +35,6 @@ export class User {
         type: "varchar",
         length: 100,
         nullable: false,
-        unique: true,
     })
     name: string;
 
