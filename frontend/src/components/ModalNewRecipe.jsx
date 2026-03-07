@@ -21,7 +21,9 @@ export default function ModelNewRecipe({ setShowForm, addRecipe }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
         addRecipe(formDataRecipe);
+
         setformDataRecipe({
             title: "",
             description: "",
@@ -33,35 +35,40 @@ export default function ModelNewRecipe({ setShowForm, addRecipe }) {
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-            <div className="bg-gray-900 rounded-xl p-6 w-full max-w-xl relative shadow-lg overflow-y-auto max-h-[90vh]">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 w-full max-w-xl relative shadow-2xl overflow-y-auto max-h-[90vh]">
+                {/* Close button */}
                 <button
-                    className="absolute top-3 right-3 text-gray-400 hover:text-white hover:cursor-pointer"
+                    className="absolute top-4 right-4 text-zinc-400 hover:text-white transition"
                     onClick={() =>
                         setShowForm((prev) => ({ ...prev, create: false }))
                     }
                 >
                     <X className="h-6 w-6" />
                 </button>
-                <h2 className="text-2xl font-bold text-white mb-4">
+
+                <h2 className="text-2xl font-bold text-white mb-6">
                     Nuova Ricetta
                 </h2>
-                <div>
+
+                <div className="space-y-4">
                     <input
                         type="text"
                         placeholder="Titolo"
                         name="title"
                         value={formDataRecipe.title}
                         onChange={handleInputRecipeChange}
-                        className="w-full mb-4 px-3 py-2 rounded-lg bg-gray-800 text-white"
+                        className="w-full px-3 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
+
                     <textarea
                         placeholder="Descrizione"
                         name="description"
                         value={formDataRecipe.description}
                         onChange={handleInputRecipeChange}
-                        className="w-full mb-4 px-3 py-2 rounded-lg bg-gray-800 text-white"
+                        className="w-full px-3 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
+
                     <input
                         type="number"
                         min={0}
@@ -69,7 +76,7 @@ export default function ModelNewRecipe({ setShowForm, addRecipe }) {
                         name="prepTime"
                         value={formDataRecipe.prepTime?.toString()}
                         onChange={handleInputRecipeChange}
-                        className="w-full mb-4 px-3 py-2 rounded-lg bg-gray-800 text-white"
+                        className="w-full px-3 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
 
                     {/* Aggiungi ingredienti */}
@@ -84,12 +91,12 @@ export default function ModelNewRecipe({ setShowForm, addRecipe }) {
                                 ],
                             });
                         }}
-                    ></AddIngredients>
+                    />
 
                     <button
                         type="button"
                         onClick={handleSubmit}
-                        className="w-full mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 hover:cursor-pointer rounded-lg text-white"
+                        className="w-full mt-4 px-4 py-2 bg-emerald-500 hover:bg-emerald-400 rounded-lg text-zinc-900 font-medium transition"
                     >
                         Salva Ricetta
                     </button>
