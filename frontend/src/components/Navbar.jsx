@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { Menu } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
-    const {isAuth} = useAuth()
 
     const links = [
         { name: "Home", path: "/" },
@@ -16,27 +14,23 @@ export default function Navbar() {
     ];
 
     return (
-        <nav className="bg-gray-900 text-gray-300 shadow-md">
+        <nav className="bg-zinc-950 text-zinc-100 shadow-lg">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 items-center">
                     {/* Logo + Links */}
                     <div className="flex items-center space-x-6">
-                        <div className="flex-shrink-0 text-xl font-bold text-white">
+                        <div className="flex-shrink-0 text-2xl font-bold text-emerald-400 tracking-tight">
                             PlanEat
                         </div>
 
-                        {/* Desktop menu links aligned left */}
+                        {/* Desktop menu links */}
                         <div className="hidden md:flex space-x-4">
                             {links.map((link) => (
                                 <Link
                                     key={link.name}
                                     to={link.path}
-                                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 
-                    ${
-                        location.pathname === link.path
-                            ? "bg-gray-800 text-white"
-                            : "text-gray-400 hover:text-white"
-                    }`}
+                                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 
+                    ${location.pathname === link.path ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-white"}`}
                                 >
                                     {link.name}
                                 </Link>
@@ -44,18 +38,13 @@ export default function Navbar() {
                         </div>
                     </div>
 
-                    {/* Login aligned right */}
+                    {/* Login/Profile */}
                     <div className="hidden md:flex">
                         <Link
-                            to={isAuth ? "/profile" : "/login"}
-                            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 
-                ${
-                    location.pathname === "/login"
-                        ? "bg-gray-800 text-white"
-                        : "text-gray-400 hover:text-white"
-                }`}
+                            to="/login"
+                            className="px-4 py-2 rounded-lg text-sm font-medium bg-emerald-500 hover:bg-emerald-400 text-black transition-all"
                         >
-                            {isAuth ? "Profilo" : "Login"}
+                            Login
                         </Link>
                     </div>
 
@@ -63,7 +52,7 @@ export default function Navbar() {
                     <div className="md:hidden">
                         <button
                             onClick={() => setIsOpen(!isOpen)}
-                            className="text-gray-300 hover:text-white focus:outline-none"
+                            className="text-zinc-100 hover:text-white focus:outline-none"
                         >
                             <Menu className="h-6 w-6" />
                         </button>
@@ -73,34 +62,24 @@ export default function Navbar() {
 
             {/* Mobile menu */}
             {isOpen && (
-                <div className="md:hidden px-2 pt-2 pb-3 space-y-1">
+                <div className="md:hidden px-2 pt-2 pb-3 space-y-1 bg-zinc-950">
                     {links.map((link) => (
                         <Link
                             key={link.name}
                             to={link.path}
                             onClick={() => setIsOpen(false)}
-                            className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 
-                ${
-                    location.pathname === link.path
-                        ? "bg-gray-800 text-white"
-                        : "text-gray-400 hover:text-white"
-                }`}
+                            className={`block w-full text-left px-3 py-2 rounded-lg text-base font-medium transition-colors duration-200 
+                ${location.pathname === link.path ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-white"}`}
                         >
                             {link.name}
                         </Link>
                     ))}
-
                     <Link
-                        to={isAuth ? "/profile" : "/login"}
+                        to="/login"
                         onClick={() => setIsOpen(false)}
-                        className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 
-              ${
-                  location.pathname === "/login"
-                      ? "bg-gray-800 text-white"
-                      : "text-gray-400 hover:text-white"
-              }`}
+                        className="block w-full text-left px-3 py-2 rounded-lg text-base font-medium bg-emerald-500 hover:bg-emerald-400 text-black transition-all"
                     >
-                        {isAuth ? "Profilo" : "Login"}
+                        Login
                     </Link>
                 </div>
             )}

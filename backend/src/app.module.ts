@@ -4,7 +4,7 @@ import { AppService } from "./app.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "./users/entities/user.entity";
 import { AuthModule } from "./auth/auth.module";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { Recipe } from "./recipes/entities/recipe.entity";
 import { Ingredient } from "./ingredients/entity/ingredient.entity";
 import { RecipeIngredient } from "./recipes/entities/recipeIngredient.entity";

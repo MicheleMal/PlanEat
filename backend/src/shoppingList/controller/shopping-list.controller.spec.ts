@@ -1,18 +1,33 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ShoppingListController } from './shopping-list.controller';
+import { Test, TestingModule } from "@nestjs/testing";
+import { ShoppingListController } from "./shopping-list.controller";
+import { ShoppingListService } from "../service/shopping-list.service";
+import { AuthGuard } from "src/auth/guard/auth.guard";
 
-describe('ShoppingListController', () => {
-  let controller: ShoppingListController;
+describe("ShoppingListController", () => {
+    let controller: ShoppingListController;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [ShoppingListController],
-    }).compile();
+    const mockShoppingListService = [];
 
-    controller = module.get<ShoppingListController>(ShoppingListController);
-  });
+    beforeEach(async () => {
+        const module: TestingModule = await Test.createTestingModule({
+            controllers: [ShoppingListController],
+            providers: [
+                {
+                    provide: ShoppingListService,
+                    useValue: mockShoppingListService,
+                },
+            ],
+        })
+            .overrideGuard(AuthGuard)
+            .useValue({
+                canActivate: jest.fn(() => true),
+            })
+            .compile();
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+        controller = module.get<ShoppingListController>(ShoppingListController);
+    });
+
+    it("should be defined", () => {
+        expect(controller).toBeDefined();
+    });
 });

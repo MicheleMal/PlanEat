@@ -40,7 +40,14 @@ export class MealsService {
             await this.mealRecipeRepository.save(newMealRecipe);
         }
 
-        return newMeal;
+        const meal = await this.mealRepository.findOne({
+            where: {
+                id: newMeal.id
+            },
+            relations: ["mealRecipe", "mealRecipe.recipe", "mealRecipe.recipe.recipeIngredient"]
+        })
+
+        return meal;
     }
 
     // Elenco di tutti i pasti
@@ -144,7 +151,7 @@ export class MealsService {
         return meal;
     }
 
-    // Eliminare ricetta
+    // Eliminare un pasto specifico
     async deleteMeal(req: Request, id: number): Promise<boolean> {
         const { userId } = req["user"];
 
