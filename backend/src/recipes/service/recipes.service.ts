@@ -147,6 +147,7 @@ export class RecipesService {
 
             if (ingredients && ingredients.length > 0) {
                 for (const ing of updateRecipeDto.ingredients) {
+                    console.log(ing)
                     // 2. Modifica campi ingrediente (quantity, unit)
                     if (ing.ingredientId && !ing.delete) {
                         await this.recipeIngredientRepository.update(
@@ -154,7 +155,10 @@ export class RecipesService {
                                 recipeId: id,
                                 ingredientId: ing.ingredientId,
                             },
-                            ing,
+                            {
+                                quantity: ing.unit !== Unit.QB ? ing.quantity : null,
+                                unit: ing.unit
+                            },
                         );
                     }
 
@@ -169,7 +173,7 @@ export class RecipesService {
                             this.recipeIngredientRepository.create({
                                 recipeId: id,
                                 ingredientId: ingredient.id,
-                                quantity: ing.quantity,
+                                quantity: ing.unit !== Unit.QB ? ing.quantity : null,
                                 unit: ing.unit,
                             });
 
