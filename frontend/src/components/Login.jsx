@@ -2,8 +2,10 @@ import { useState } from "react";
 import { signin, signup } from "../service/auth";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useNotification } from "../context/NotificationContext.jsx";
 
 export default function Login() {
+    const { notify } = useNotification();
     const { login } = useAuth();
 
     const [user, setUser] = useState({
@@ -25,6 +27,8 @@ export default function Login() {
                 const { access_token } = await signin(user);
                 login(access_token);
                 navigate("/");
+
+                notify("Login effettuato con successo", "success");
             } catch (error) {
                 setError(error.response?.data?.message || "Errore di login");
             }
@@ -32,6 +36,8 @@ export default function Login() {
             try {
                 await signup(user);
                 setIsLogin(true);
+
+                notify("Registrazione effettuata con successo", "success");
             } catch (error) {
                 console.error(error);
             }

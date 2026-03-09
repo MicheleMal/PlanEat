@@ -8,6 +8,7 @@ import Authentication from "./pages/Authentication.jsx";
 import Profile from "./pages/Profile.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import Meals from "./pages/Meals.jsx";
+import { NotificationProvider } from "./context/NotificationContext.jsx";
 
 const router = createBrowserRouter([
     {
@@ -33,9 +34,11 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")).render(
-    <AuthProvider>
-        <StrictMode>
-            <RouterProvider router={router} />
-        </StrictMode>
-    </AuthProvider>
+    <StrictMode>
+        <NotificationProvider>
+            <AuthProvider>
+                <RouterProvider router={router} />
+            </AuthProvider>
+        </NotificationProvider>
+    </StrictMode>,
 );

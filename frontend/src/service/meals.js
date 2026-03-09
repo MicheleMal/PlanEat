@@ -24,9 +24,15 @@ export const createMeal = async (token, newMeal) => {
     return data;
 };
 
-/*export const updateMeal = async(meal, id, token) => {
-    const {data} = await axios.patch(`${url}meals`, )
-}*/
+export const updateMeal = async (meal, id, token) => {
+    const { data } = await axios.patch(`${url}meals/${id}`, meal, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    return data;
+};
 
 export const deleteMeal = async (id, token) => {
     const { data } = await axios.delete(`${url}meals/${id}`, {

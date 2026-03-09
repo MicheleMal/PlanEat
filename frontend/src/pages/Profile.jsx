@@ -3,8 +3,11 @@ import Navbar from "../components/Navbar";
 import { deleteProfile, getProfile, updateProfile } from "../service/user";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useNotification } from "../context/NotificationContext.jsx";
 
 export default function Profile() {
+    const { notify } = useNotification();
+
     const { token, logout } = useAuth();
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
@@ -27,6 +30,8 @@ export default function Profile() {
             const data = await updateProfile(user, token);
 
             setUser(data);
+
+            notify("Profilo aggiornato con successo", "success");
         } catch (error) {
             console.error(error);
         }
@@ -38,6 +43,8 @@ export default function Profile() {
 
             navigate("/");
             localStorage.removeItem("token");
+
+            notify("Profilo eliminato con successo", "success");
         } catch (error) {
             console.error(error);
         }

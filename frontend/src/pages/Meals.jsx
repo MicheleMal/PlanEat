@@ -2,26 +2,24 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { Plus } from "lucide-react";
 import ModalNewMeal from "../components/ModalNewMeal";
-import { createMeal, deleteMeal, getMeals } from "../service/meals";
+import ModalUpdateMeal from "../components/ModalUpdateMeal";
+import { createMeal, deleteMeal, getMeals, updateMeal } from "../service/meals";
 import { useAuth } from "../context/AuthContext";
-import { getRecipesById } from "../service/recipes";
-import ModalRecipe from "../components/ModalRecipe";
-
-const mealColors = {
-    Colazione: "bg-yellow-600",
-    Pranzo: "bg-green-600",
-    Merenda: "bg-purple-600",
-    Aperitivo: "bg-red-600",
-    Cena: "bg-blue-600",
-};
+import DayCard from "../components/DayCard";
+import { useNotification } from "../context/NotificationContext.jsx";
 
 export default function Meals() {
+    const { notify } = useNotification();
+
     const { token } = useAuth();
+
     const [showForm, setShowForm] = useState({
         create: false,
+        editing: false,
     });
 
     const [meals, setMeals] = useState([]);
+    const [selectedMeal, setSelectedMeal] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -37,27 +35,36 @@ export default function Meals() {
         };
 
         fetchMeals();
-    }, []);
+    }, [token]);
 
     const addMeal = async (newMeal) => {
         try {
             await createMeal(token, newMeal);
-            const meals = await getMeals(token);
-            setMeals(meals);
+            const updatedMeals = await getMeals(token);
+            setMeals(updatedMeals);
+
+            notify("Pasto aggiunto con successo", "success");
         } catch (error) {
             console.error(error);
         }
     };
 
-    const getRecipe = async (id) => {
+    const onUpdateMeal = async (updatedMeal, id) => {
         try {
-            const data = await getRecipesById(token, id);
+            await updateMeal(updatedMeal, id, token);
 
-            console.log(data);
+            const updatedMeals = meals.map((meal) =>
+                meal.id === id ? { ...meal, ...updatedMeal } : meal,
+            );
 
-            return data;
+            setMeals(updatedMeals);
+
+            setShowForm((prev) => ({ ...prev, editing: false }));
+            setSelectedMeal(null);
+
+            notify("Pasto modificato con successo", "success");
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 
@@ -66,117 +73,90 @@ export default function Meals() {
             await deleteMeal(id, token);
 
             const newMeals = meals.filter((meal) => meal.id !== id);
-
             setMeals(newMeals);
+
+            notify("Pasto eliminato con successo", "success");
         } catch (error) {
             console.error(error);
         }
     };
 
+    /* apertura modal modifica */
+    const openEditMeal = (meal) => {
+        setSelectedMeal(meal);
+        setShowForm((prev) => ({ ...prev, editing: true }));
+    };
+
+    /* raggruppa pasti per data */
+    const groupedMeals = meals.reduce((acc, meal) => {
+        const date = meal.date;
+
+        if (!acc[date]) acc[date] = [];
+
+        acc[date].push(meal);
+
+        return acc;
+    }, {});
+
     return (
         <>
             <Navbar />
-            <div className="bg-gray-950 min-h-screen text-gray-300 p-6 relative">
-                <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-3xl font-bold text-white">Pasti</h1>
-                    <button
-                        onClick={() =>
-                            setShowForm({ ...showForm, create: true })
-                        }
-                        className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 hover:cursor-pointer rounded-lg text-white"
-                    >
-                        <Plus className="h-5 w-5" /> Nuovo Pasto
-                    </button>
+
+            <div className="bg-black min-h-screen text-white p-10">
+                <div className="max-w-5xl mx-auto">
+                    <div className="flex justify-between items-center mb-8">
+                        <h1 className="text-3xl font-bold">
+                            Pasti Pianificati
+                        </h1>
+
+                        <button
+                            onClick={() =>
+                                setShowForm((prev) => ({
+                                    ...prev,
+                                    create: true,
+                                }))
+                            }
+                            className="flex items-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-400 rounded-lg text-zinc-900 font-medium"
+                        >
+                            <Plus className="h-5 w-5" />
+                            Nuovo Pasto
+                        </button>
+                    </div>
+
+                    {loading ? (
+                        <div className="flex flex-col justify-center items-center h-64 gap-4">
+                            <div className="animate-spin rounded-full h-12 w-12 border-4 border-white border-t-transparent"></div>
+                            <p className="text-white text-lg">
+                                Caricamento pasti...
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {Object.entries(groupedMeals).map(
+                                ([date, meals]) => (
+                                    <DayCard
+                                        key={date}
+                                        date={date}
+                                        meals={meals}
+                                        onEdit={openEditMeal}
+                                        onDelete={onDeleteMeal}
+                                    />
+                                ),
+                            )}
+                        </div>
+                    )}
                 </div>
 
-                {/* Loading */}
-                {loading ? (
-                    <div className="flex flex-col justify-center items-center h-64 gap-4">
-                        <div className="animate-spin rounded-full h-12 w-12 border-4 border-white border-t-transparent"></div>
-                        <p className="text-white text-lg">
-                            Caricamento pasti...
-                        </p>
-                    </div>
-                ) : (
-                    // Lista pasti
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {meals.map((meal) => (
-                            <div key={meal.id}>
-                                <h2 className="text-xl font-bold text-white mb-4 border-b border-gray-700 pb-2">
-                                    {new Date(meal.date).toLocaleDateString(
-                                        "it-IT",
-                                        {
-                                            weekday: "long",
-                                            day: "numeric",
-                                            month: "long",
-                                        }
-                                    )}
-                                </h2>
-                                <div className="bg-gray-800 p-4 rounded-xl shadow-md border border-gray-700 hover:border-gray-600 transition">
-                                    <div className="flex items-start justify-between">
-                                        <div>
-                                            <span
-                                                className={`${
-                                                    mealColors[meal.mealType]
-                                                } text-white px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3`}
-                                            >
-                                                {meal.mealType.toUpperCase()}
-                                            </span>
-                                            <div className="flex flex-wrap gap-2">
-                                                {meal.mealRecipe.map((r) => {
-                                                    const recipe = getRecipe(
-                                                        r.id
-                                                    );
-                                                    return recipe ? (
-                                                        <button
-                                                            key={r.id}
-                                                            //onClick={() => setSelected(recipe)}
-                                                            className="bg-gray-700 hover:bg-gray-600 px-3 py-2 rounded-md text-sm text-left"
-                                                        >
-                                                            {r.recipe.title}
-                                                        </button>
-                                                    ) : null;
-                                                })}
-                                            </div>
-                                        </div>
-
-                                        <div className="flex flex-col items-end gap-2">
-                                            <div className="text-gray-400 text-sm">
-                                                {new Date(
-                                                    meal.date
-                                                ).toLocaleDateString("it-IT")}
-                                            </div>
-
-                                            <div className="flex gap-2">
-                                                <button
-                                                    //onClick={() => openEdit(meal)}
-                                                    className="px-3 py-1 bg-yellow-600 hover:bg-yellow-500 rounded text-white text-sm"
-                                                >
-                                                    Modifica
-                                                </button>
-                                                <button
-                                                    onClick={() =>
-                                                        onDeleteMeal(meal.id)
-                                                    }
-                                                    className="px-3 py-1 bg-red-600 hover:bg-red-500 rounded text-white text-sm"
-                                                >
-                                                    Elimina
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                {showForm.create && (
+                    <ModalNewMeal setShowForm={setShowForm} addMeal={addMeal} />
                 )}
 
-                {/* Modale nuova ricetta */}
-                {showForm.create === true && (
-                    <ModalNewMeal
+                {showForm.editing && selectedMeal && (
+                    <ModalUpdateMeal
                         setShowForm={setShowForm}
-                        addMeal={addMeal}
-                    ></ModalNewMeal>
+                        meal={selectedMeal}
+                        onUpdate={onUpdateMeal}
+                    />
                 )}
             </div>
         </>

@@ -12,8 +12,12 @@ import {
 import ModalUpdateRecipe from "../components/ModelUpdateRecipe.jsx";
 import ModalAddIngredientRecipe from "../components/ModalAddIngredientRecipe.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
+import { useNotification } from "../context/NotificationContext.jsx";
+
 
 export default function Recipes() {
+    const { notify } = useNotification();
+
     const { token } = useAuth();
 
     const [recipes, setRecipes] = useState([]);
@@ -31,13 +35,14 @@ export default function Recipes() {
     // Caricamento
     const [loading, setLoading] = useState(true);
 
-    //? Eliminare dopo il fix del backend, getRecipes
     // Inserire nuova ricetta
     const addRecipe = async (newRecipe) => {
         try {
             await createRecipe(newRecipe, token);
             const recipes = await getRecipes(token);
             setRecipes(recipes);
+
+            notify("Ricetta creata con successo", "success");
         } catch (error) {
             console.error(error);
         }
@@ -64,7 +69,7 @@ export default function Recipes() {
         const updatedIngredient = [];
         originalRecipe.recipeIngredient.forEach((ing) => {
             const uRecipe = updatedRecipe.recipeIngredient.find(
-                (u) => u.ingredientId === ing.ingredientId
+                (u) => u.ingredientId === ing.ingredientId,
             );
 
             if (uRecipe) {
@@ -92,6 +97,8 @@ export default function Recipes() {
         try {
             await updateRecipe(updatedRecipeObject, id, token);
             setRecipes(await getRecipes(token));
+
+            notify("Ingrediente modificato con successo", "success")
         } catch (error) {
             console.error(error);
         }
@@ -101,7 +108,7 @@ export default function Recipes() {
     const removeIngredientRecipe = async (
         id,
         ingredientId,
-        deleteIngredient
+        deleteIngredient,
     ) => {
         const deletedIngredientRecipe = {
             ingredients: [],
@@ -117,6 +124,8 @@ export default function Recipes() {
         try {
             await updateRecipe(deletedIngredientRecipe, id, token);
             setRecipes(await getRecipes(token));
+
+            notify("Ingrediente eliminato con successo", "success")
         } catch (error) {
             console.error(error);
         }
@@ -142,6 +151,8 @@ export default function Recipes() {
         try {
             await updateRecipe(ingredientRecipe, selected.id, token);
             setRecipes(await getRecipes(token));
+
+            notify("Ingrediente aggiunto con successo", "success")
         } catch (error) {
             console.error(error);
         }
@@ -156,6 +167,8 @@ export default function Recipes() {
 
             setRecipes(newRecipes);
             setSelected(null);
+
+            notify("Ricetta eliminata con successo", "success");
         } catch (error) {
             console.error(error);
         }
